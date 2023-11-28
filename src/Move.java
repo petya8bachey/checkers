@@ -10,4 +10,8 @@ public class Move {
                 newPiece.toString() +  " " +
                 Arrays.deepToString(new ArrayList[]{pieces});
     }
+
+    public int checkMove() {
+        return pieces.toArray().length;
+    }
 }

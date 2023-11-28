@@ -2,6 +2,9 @@ import java.util.ArrayList;
 
 public class Board {
     Piece[][] board = new Piece[8][8];
+    public int pieceCof = 10;
+    public int godPieceCof = 5;
+    public int queenCof = 30;
 
     Board() {
         for (int i = 0; i < 8; i++) {
@@ -249,5 +252,45 @@ public class Board {
             }
         }
         return moveArrayList;
+    }
+
+    public ArrayList<Piece> piecesList(boolean color) {
+        ArrayList<Piece> pieceArrayList = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if ((i + j) % 2 == 0 && board[i][j].color == color) {
+                    pieceArrayList.add(board[i][j]);
+                }
+            }
+        }
+        return pieceArrayList;
+    }
+
+    public int checkPos() {
+        int white = 0;
+        int black = 0;
+        ArrayList<Piece> whiteList  = piecesList(true);
+        ArrayList<Piece> blackList = piecesList(false);
+        for (Piece piece: whiteList) {
+            if (piece.queen) {
+                white += queenCof;
+            } else {
+                white += pieceCof;
+            }
+            if (piece.column % 7 == 0) {
+                white += godPieceCof;
+            }
+        }
+        for (Piece piece: blackList) {
+            if (piece.queen) {
+                black += queenCof;
+            } else {
+                black += pieceCof;
+            }
+            if (piece.column % 7 == 0) {
+                black += godPieceCof;
+            }
+        }
+        return white - black;
     }
 }
