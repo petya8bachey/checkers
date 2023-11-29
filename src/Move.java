@@ -6,12 +6,12 @@ public class Move {
     Piece newPiece;
     ArrayList<Piece> pieces = new ArrayList<>();
     public String toString() {
-        return oldPiece.toString() + " " +
-                newPiece.toString() +  " " +
+        return oldPiece.toStringFull() + " " +
+                newPiece.toStringFull() +  " " +
                 Arrays.deepToString(new ArrayList[]{pieces});
     }
 
     public int checkMove() {
-        return pieces.toArray().length;
+        return pieces.size();
     }
 }

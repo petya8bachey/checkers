@@ -2,10 +2,11 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args){
-        try {
-            Game game = new Game();
-            System.out.println(game.board);
-            System.out.println(game.canMove());
-        } catch (Exception e) {}
+        Game game = new Game();
+        System.out.println(game);
+        for (int i = 0; i < 14; i++) {
+            game.makeMove(game.clone().bestMove(game.clone()));
+            System.out.println(game);
+        }
     }
 }

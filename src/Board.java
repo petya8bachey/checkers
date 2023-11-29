@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-public class Board {
-    Piece[][] board = new Piece[8][8];
+public class Board implements Cloneable{
+    Piece[][] field = new Piece[8][8];
     public int pieceCof = 10;
     public int godPieceCof = 5;
     public int queenCof = 30;
@@ -20,25 +20,28 @@ public class Board {
                         piece.color = true;
                         piece.empty = false;
                     }
-                    board[i][j] = piece;
+                    field[i][j] = piece;
                 }
             }
         }
     }
 
-    void setMove(Move move) {
-        if (move.oldPiece.color && move.newPiece.line == 0) {
-            move.oldPiece.queen = true;
+    public void setMove(Move move) {
+        Piece oldPiece = field[move.oldPiece.line][move.oldPiece.column];
+        Piece newPiece = field[move.newPiece.line][move.newPiece.column];
+        ArrayList<Piece> pieces = move.pieces;
+        if (oldPiece.color && newPiece.line == 0) {
+            oldPiece.queen = true;
         }
-        if (!move.oldPiece.color && move.newPiece.line == 7) {
-            move.oldPiece.queen = true;
+        if (!oldPiece.color && newPiece.line == 7) {
+            oldPiece.queen = true;
         }
-        move.newPiece.color = move.oldPiece.color;
-        move.newPiece.queen = move.oldPiece.queen;
-        move.newPiece.empty = false;
-        move.oldPiece.empty = true;
-        for (Piece piece : move.pieces) {
-            piece.empty = true;
+        newPiece.color = oldPiece.color;
+        newPiece.queen = oldPiece.queen;
+        newPiece.empty = false;
+        oldPiece.empty = true;
+        for (Piece piece : pieces) {
+            field[piece.line][piece.column].empty = true;
         }
     }
 
@@ -47,7 +50,7 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if ((i + j) % 2 == 0) {
-                    builder.append(board[i][j].toString());
+                    builder.append(field[i][j].toString());
                 } else {
                     builder.append("-");
                 }
@@ -65,63 +68,63 @@ public class Board {
         boolean need = false;
         if (!piece.empty) {
             if (!piece.queen) {
-                if (line - 2 >= 0 && column - 2 >= 0 && board[line - 2][column - 2].empty && board[line - 1][column - 1].color != piece.color && !board[line - 1][column - 1].empty) {
+                if (line - 2 >= 0 && column - 2 >= 0 && field[line - 2][column - 2].empty && field[line - 1][column - 1].color != piece.color && !field[line - 1][column - 1].empty) {
                     Move move = new Move();
                     move.oldPiece = piece;
-                    move.newPiece = board[line - 2][column - 2];
-                    move.pieces.add(board[line - 1][column - 1]);
+                    move.newPiece = field[line - 2][column - 2];
+                    move.pieces.add(field[line - 1][column - 1]);
                     moveArrayList.add(move);
                     need = true;
                 }
-                if (line + 2 < 8 && column - 2 >= 0 && board[line + 2][column - 2].empty && board[line + 1][column - 1].color != piece.color && !board[line + 1][column - 1].empty) {
+                if (line + 2 < 8 && column - 2 >= 0 && field[line + 2][column - 2].empty && field[line + 1][column - 1].color != piece.color && !field[line + 1][column - 1].empty) {
                     Move move = new Move();
                     move.oldPiece = piece;
-                    move.newPiece = board[line + 2][column - 2];
-                    move.pieces.add(board[line + 1][column - 1]);
+                    move.newPiece = field[line + 2][column - 2];
+                    move.pieces.add(field[line + 1][column - 1]);
                     moveArrayList.add(move);
                     need = true;
                 }
-                if (line + 2 < 8 && column + 2 < 8 && board[line + 2][column + 2].empty && board[line + 1][column + 1].color != piece.color && !board[line + 1][column + 1].empty) {
+                if (line + 2 < 8 && column + 2 < 8 && field[line + 2][column + 2].empty && field[line + 1][column + 1].color != piece.color && !field[line + 1][column + 1].empty) {
                     Move move = new Move();
                     move.oldPiece = piece;
-                    move.newPiece = board[line + 2][column + 2];
-                    move.pieces.add(board[line + 1][column + 1]);
+                    move.newPiece = field[line + 2][column + 2];
+                    move.pieces.add(field[line + 1][column + 1]);
                     moveArrayList.add(move);
                     need = true;
                 }
-                if (line - 2 >= 0 && column + 2 < 8 && board[line - 2][column + 2].empty && board[line - 1][column + 1].color != piece.color && !board[line - 1][column + 1].empty) {
+                if (line - 2 >= 0 && column + 2 < 8 && field[line - 2][column + 2].empty && field[line - 1][column + 1].color != piece.color && !field[line - 1][column + 1].empty) {
                     Move move = new Move();
                     move.oldPiece = piece;
-                    move.newPiece = board[line - 2][column + 2];
-                    move.pieces.add(board[line - 1][column + 1]);
+                    move.newPiece = field[line - 2][column + 2];
+                    move.pieces.add(field[line - 1][column + 1]);
                     moveArrayList.add(move);
                     need = true;
                 }
                 if (!need) {
                     if (piece.color) {
-                        if (line - 1 >= 0 && column - 1 >= 0 && board[line - 1][column - 1].empty) {
+                        if (line - 1 >= 0 && column - 1 >= 0 && field[line - 1][column - 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[line - 1][column - 1];
+                            move.newPiece = field[line - 1][column - 1];
                             moveArrayList.add(move);
                         }
-                        if (line - 1 >= 0 && column + 1 < 8 && board[line - 1][column + 1].empty) {
+                        if (line - 1 >= 0 && column + 1 < 8 && field[line - 1][column + 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[line - 1][column + 1];
+                            move.newPiece = field[line - 1][column + 1];
                             moveArrayList.add(move);
                         }
                     } else {
-                        if (line + 1 >= 0 && column + 1 >= 0 && board[line + 1][column + 1].empty) {
+                        if (line + 1 < 8 && column + 1 < 8 && field[line + 1][column + 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[line + 1][column + 1];
+                            move.newPiece = field[line + 1][column + 1];
                             moveArrayList.add(move);
                         }
-                        if (line + 1 >= 0 && column - 1 < 8 && board[line + 1][column - 1].empty) {
+                        if (line + 1 < 8 && column - 1 >= 0 && field[line + 1][column - 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[line + 1][column - 1];
+                            move.newPiece = field[line + 1][column - 1];
                             moveArrayList.add(move);
                         }
                     }
@@ -130,14 +133,12 @@ public class Board {
                 int lLine = line;
                 int lColumn = column;
                 while (lLine >= 1 && lColumn >= 1) {
-                    lLine--;
-                    lColumn--;
-                    if (board[lLine][lColumn].color != piece.color && board[lLine - 1][lColumn - 1].empty) {
-                        Piece eat = board[lLine][lColumn];
-                        while (lLine >= 1 && lColumn >= 1 && board[lLine - 1][lColumn - 1].empty) {
+                    if (field[lLine][lColumn].color != piece.color && field[lLine - 1][lColumn - 1].empty) {
+                        Piece eat = field[lLine][lColumn];
+                        while (lLine >= 1 && lColumn >= 1 && field[lLine - 1][lColumn - 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[lLine - 1][lColumn - 1];
+                            move.newPiece = field[lLine - 1][lColumn - 1];
                             move.pieces.add(eat);
                             moveArrayList.add(move);
                             lLine--;
@@ -146,18 +147,18 @@ public class Board {
                         need = true;
                         break;
                     }
+                    lLine--;
+                    lColumn--;
                 }
                 lLine = line;
                 lColumn = column;
                 while (lLine <= 6 && lColumn >= 1) {
-                    lLine++;
-                    lColumn--;
-                    if (board[lLine][lColumn].color != piece.color && board[lLine + 1][lColumn - 1].empty) {
-                        Piece eat = board[lLine][lColumn];
-                        while (lLine <= 6 && lColumn >= 1 && board[lLine + 1][lColumn - 1].empty) {
+                    if (field[lLine][lColumn].color != piece.color && field[lLine + 1][lColumn - 1].empty) {
+                        Piece eat = field[lLine][lColumn];
+                        while (lLine <= 6 && lColumn >= 1 && field[lLine + 1][lColumn - 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[lLine + 1][lColumn - 1];
+                            move.newPiece = field[lLine + 1][lColumn - 1];
                             move.pieces.add(eat);
                             moveArrayList.add(move);
                             lLine++;
@@ -166,18 +167,19 @@ public class Board {
                         need = true;
                         break;
                     }
+                    lLine++;
+                    lColumn--;
                 }
                 lLine = line;
                 lColumn = column;
                 while (lLine <= 6 && lColumn <= 6) {
-                    lLine++;
-                    lColumn++;
-                    if (board[lLine][lColumn].color != piece.color && board[lLine + 1][lColumn + 1].empty) {
-                        Piece eat = board[lLine][lColumn];
-                        while (lLine <= 6 && lColumn <= 6 && board[lLine + 1][lColumn + 1].empty) {
+
+                    if (field[lLine][lColumn].color != piece.color && field[lLine + 1][lColumn + 1].empty) {
+                        Piece eat = field[lLine][lColumn];
+                        while (lLine <= 6 && lColumn <= 6 && field[lLine + 1][lColumn + 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[lLine + 1][lColumn + 1];
+                            move.newPiece = field[lLine + 1][lColumn + 1];
                             move.pieces.add(eat);
                             moveArrayList.add(move);
                             lLine++;
@@ -186,18 +188,19 @@ public class Board {
                         need = true;
                         break;
                     }
+                    lLine++;
+                    lColumn++;
                 }
                 lLine = line;
                 lColumn = column;
                 while (lLine >= 1 && lColumn <= 6) {
-                    lLine--;
-                    lColumn++;
-                    if (board[lLine][lColumn].color != piece.color && board[lLine - 1][lColumn + 1].empty) {
-                        Piece eat = board[lLine][lColumn];
-                        while (lLine >= 1 && lColumn <= 6 && board[lLine - 1][lColumn + 1].empty) {
+
+                    if (field[lLine][lColumn].color != piece.color && field[lLine - 1][lColumn + 1].empty) {
+                        Piece eat = field[lLine][lColumn];
+                        while (lLine >= 1 && lColumn <= 6 && field[lLine - 1][lColumn + 1].empty) {
                             Move move = new Move();
                             move.oldPiece = piece;
-                            move.newPiece = board[lLine - 1][lColumn + 1];
+                            move.newPiece = field[lLine - 1][lColumn + 1];
                             move.pieces.add(eat);
                             moveArrayList.add(move);
                             lLine--;
@@ -206,44 +209,46 @@ public class Board {
                         need = true;
                         break;
                     }
+                    lLine--;
+                    lColumn++;
                 }
                 if (!need) {
                     lLine = line;
                     lColumn = column;
-                    while (lLine >= 1 && lColumn >= 1 && board[lLine - 1][lColumn - 1].empty) {
+                    while (lLine >= 1 && lColumn >= 1 && field[lLine - 1][lColumn - 1].empty) {
                         Move move = new Move();
                         move.oldPiece = piece;
-                        move.newPiece = board[lLine - 1][lColumn - 1];
+                        move.newPiece = field[lLine - 1][lColumn - 1];
                         moveArrayList.add(move);
                         lLine--;
                         lColumn--;
                     }
                     lLine = line;
                     lColumn = column;
-                    while (lLine <= 6 && lColumn >= 1 && board[lLine + 1][lColumn - 1].empty) {
+                    while (lLine <= 6 && lColumn >= 1 && field[lLine + 1][lColumn - 1].empty) {
                         Move move = new Move();
                         move.oldPiece = piece;
-                        move.newPiece = board[lLine + 1][lColumn - 1];
+                        move.newPiece = field[lLine + 1][lColumn - 1];
                         moveArrayList.add(move);
                         lLine++;
                         lColumn--;
                     }
                     lLine = line;
                     lColumn = column;
-                    while (lLine <= 6 && lColumn <= 6 && board[lLine + 1][lColumn + 1].empty) {
+                    while (lLine <= 6 && lColumn <= 6 && field[lLine + 1][lColumn + 1].empty) {
                         Move move = new Move();
                         move.oldPiece = piece;
-                        move.newPiece = board[lLine + 1][lColumn + 1];
+                        move.newPiece = field[lLine + 1][lColumn + 1];
                         moveArrayList.add(move);
                         lLine++;
                         lColumn++;
                     }
                     lLine = line;
                     lColumn = column;
-                    while (lLine >= 1 && lColumn <= 6 && board[lLine - 1][lColumn + 1].empty) {
+                    while (lLine >= 1 && lColumn <= 6 && field[lLine - 1][lColumn + 1].empty) {
                         Move move = new Move();
                         move.oldPiece = piece;
-                        move.newPiece = board[lLine - 1][lColumn + 1];
+                        move.newPiece = field[lLine - 1][lColumn + 1];
                         moveArrayList.add(move);
                         lLine--;
                         lColumn++;
@@ -258,8 +263,8 @@ public class Board {
         ArrayList<Piece> pieceArrayList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if ((i + j) % 2 == 0 && board[i][j].color == color) {
-                    pieceArrayList.add(board[i][j]);
+                if ((i + j) % 2 == 0 && field[i][j].color == color && !field[i][j].empty) {
+                    pieceArrayList.add(field[i][j]);
                 }
             }
         }
@@ -277,7 +282,7 @@ public class Board {
             } else {
                 white += pieceCof;
             }
-            if (piece.column % 7 == 0) {
+            if (piece.column == 0 || piece.column == 7) {
                 white += godPieceCof;
             }
         }
@@ -287,10 +292,32 @@ public class Board {
             } else {
                 black += pieceCof;
             }
-            if (piece.column % 7 == 0) {
+            if (piece.column == 0 || piece.column == 7) {
                 black += godPieceCof;
             }
         }
         return white - black;
+    }
+
+    public boolean win(boolean color) {
+        ArrayList<Piece> pieces = piecesList(!color);
+        ArrayList<Move> moves = new ArrayList<>();
+        for (Piece piece : pieces) {
+            moves.addAll(getMove(piece));
+        }
+        return moves.isEmpty();
+    }
+
+    @Override
+    public Board clone() {
+        Board result = new Board();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if ((i + j) % 2 == 0) {
+                    result.field[i][j] = field[i][j].clone();
+                }
+            }
+        }
+        return result;
     }
 }
