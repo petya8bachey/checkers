@@ -15,9 +15,5 @@ public class Main {
         Game game = new Game();
         frame.add(game);
         frame.setVisible(true);
-        for (int i = 0; i < 14; i++) {
-            game.makeMove(game.clone().bestMove(game.clone()));
-            sleep(2000);
-        }
     }
 }

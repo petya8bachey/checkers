@@ -5,9 +5,11 @@ import java.util.ArrayList;
 public class Game extends JPanel implements Cloneable {
     Player playerWhite = new Player();
     Player playerBlack = new Player();
+    Piece selectedPiece = null;
     Player current = playerWhite;
     Board board = new Board();
-    public int deeper = 0;
+    Input input = new Input(this);
+    public int deeper = 5;
     public int titleSize = 85;
     Game() {
         playerWhite.color = true;
@@ -15,6 +17,8 @@ public class Game extends JPanel implements Cloneable {
         playerWhite.type = false;
         playerBlack.type = false;
         this.setPreferredSize(new Dimension(8*titleSize, 8*titleSize));
+        this.addMouseListener(input);
+        this.addMouseMotionListener(input);
     }
 
     public void paintComponent(Graphics g){
@@ -26,14 +30,11 @@ public class Game extends JPanel implements Cloneable {
             }
         }
         ArrayList<Move> moves = canMove();
-        ArrayList<Piece> pieces = new ArrayList<>();
         for (Move move : moves) {
             g2d.setColor(new Color(192, 241, 59, 137));
             g2d.fillRect(move.newPiece.column * titleSize, move.newPiece.line * titleSize, titleSize, titleSize);
         }
-
-
-        // Отрисовака фигур
+        ArrayList<Piece> pieces = board.piecesList(true);
         pieces = board.piecesList(true);
         pieces.addAll(board.piecesList(false));
         for(Piece piece : pieces){
@@ -75,8 +76,8 @@ public class Game extends JPanel implements Cloneable {
     }
 
     public Move bestMove(Game game) {
-        Move bestMove = null;
-        int best = (game.current.color? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        Move bestMove = game.canMove().get(0);
+        int best = (game.current.color? Integer.MIN_VALUE + 1: Integer.MAX_VALUE - 1);
         if (game.current.color) {
             for (Move move: game.canMove()) {
                 game.makeMove(move);
@@ -130,5 +131,18 @@ public class Game extends JPanel implements Cloneable {
         game.current = current;
         game.board = board.clone();
         return game;
+    }
+
+    public Move isValidMove(Move move, Game game) {
+        if (current.color == move.oldPiece.color) {
+            ArrayList<Move> moves = game.board.getMove(board.field[move.oldPiece.line][move.oldPiece.column]);
+            for (Move local: moves) {
+                System.out.println(local);
+                if (local.equals(move)) {
+                    return local;
+                }
+            }
+        }
+        return null;
     }
 }

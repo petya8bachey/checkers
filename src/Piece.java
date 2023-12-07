@@ -7,13 +7,19 @@ public class Piece implements Cloneable{
     int line;
     int column;
     int size = 85;
+    int xPos;
+    int yPos;
     int r = 70;
     public String toString() {
+        String result = "";
         if (empty) {
-            return "0";
+            result += "0";
         } else if (color) {
-            return  "w";
-        } return "b";
+            result += "w";
+        } else {
+            result +=  "b";
+        }
+        return result + " " + line + " " + column;
     }
     public String toStringFull() {
         String result = "";
@@ -44,5 +50,10 @@ public class Piece implements Cloneable{
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(!color ? new Color(134, 20, 20):new Color(50, 85, 192));
         g2d.fillRect(column * size,line * size,r,r);
+    }
+    @Override
+    public boolean equals(Object object) {
+        Piece piece = (Piece) object;
+        return queen == piece.queen && color == piece.color && empty == piece.empty && column == piece.column && line == piece.line;
     }
 }

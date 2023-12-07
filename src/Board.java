@@ -256,6 +256,27 @@ public class Board implements Cloneable{
                 }
             }
         }
+//        if (need) {
+//            ArrayList<Move> newMoveArrayList = new ArrayList<>();
+//            for (Move move: moveArrayList) {
+//                Board local = this.clone();
+//                local.setMove(move);
+//                ArrayList<Move> localMoveArrayList = local.getMove(local.field[move.newPiece.line][move.newPiece.column]);
+//                if (!localMoveArrayList.isEmpty()) {
+//                    if (!localMoveArrayList.get(0).pieces.isEmpty()) {
+//                        for (Move localMove : localMoveArrayList) {
+//                            Move newMove = new Move();
+//                            newMove.oldPiece = local.field[move.oldPiece.line][move.oldPiece.column];
+//                            newMove.newPiece = local.field[move.newPiece.line][move.newPiece.column];
+//                            newMove.pieces.add(move.pieces.get(0));
+//                            newMove.pieces.add(localMove.pieces.get(0));
+//                            newMoveArrayList.add(newMove);
+//                        }
+//                        return newMoveArrayList;
+//                    }
+//                }
+//            }
+//        }
         return moveArrayList;
     }
 

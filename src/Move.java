@@ -14,4 +14,10 @@ public class Move {
     public int checkMove() {
         return pieces.size();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Move move = (Move) obj;
+        return newPiece.equals(move.newPiece) && oldPiece.equals(move.oldPiece);
+    }
 }
