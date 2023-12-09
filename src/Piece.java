@@ -10,6 +10,7 @@ public class Piece implements Cloneable{
     int xPos;
     int yPos;
     int r = 70;
+    int s = 20;
     public String toString() {
         String result = "";
         if (empty) {
@@ -50,6 +51,10 @@ public class Piece implements Cloneable{
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(!color ? new Color(134, 20, 20):new Color(50, 85, 192));
         g2d.fillRect(column * size,line * size,r,r);
+        if (queen) {
+            g2d.setColor(color ? new Color(134, 20, 20):new Color(50, 85, 192));
+            g2d.fillRect(column * size,line * size,s,s);
+        }
     }
     @Override
     public boolean equals(Object object) {

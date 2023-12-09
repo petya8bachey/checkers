@@ -1,5 +1,8 @@
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Input extends MouseAdapter {
 
@@ -18,6 +21,7 @@ public class Input extends MouseAdapter {
         if (pieceXY != null) {
             game.selectedPiece = pieceXY;
         }
+        game.repaint();
     }
 
     @Override
@@ -33,9 +37,14 @@ public class Input extends MouseAdapter {
             move = game.isValidMove(move, game);
             if (move != null) {
                 game.makeMove(move);
+                System.out.println(game.board.checkPos());
                 game.repaint();
-                System.out.println("comp");
+                if (game.board.win(!game.current.color)) {
+                    System.out.println("You win");
+                }
+
                 game.makeMove(game.bestMove(game.clone()));
+                System.out.println(game.board.checkPos());
                 game.selectedPiece = null;
                 game.repaint();
             } else {

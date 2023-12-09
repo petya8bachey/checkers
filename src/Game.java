@@ -9,12 +9,12 @@ public class Game extends JPanel implements Cloneable {
     Player current = playerWhite;
     Board board = new Board();
     Input input = new Input(this);
-    public int deeper = 5;
+    public int deeper = 0;
     public int titleSize = 85;
     Game() {
         playerWhite.color = true;
         playerBlack.color = false;
-        playerWhite.type = false;
+        playerWhite.type = true;
         playerBlack.type = false;
         this.setPreferredSize(new Dimension(8*titleSize, 8*titleSize));
         this.addMouseListener(input);
@@ -29,7 +29,7 @@ public class Game extends JPanel implements Cloneable {
                 g2d.fillRect(j * titleSize,i * titleSize,titleSize,titleSize);
             }
         }
-        ArrayList<Move> moves = canMove();
+        ArrayList<Move> moves = board.getMove(selectedPiece);
         for (Move move : moves) {
             g2d.setColor(new Color(192, 241, 59, 137));
             g2d.fillRect(move.newPiece.column * titleSize, move.newPiece.line * titleSize, titleSize, titleSize);
@@ -77,7 +77,7 @@ public class Game extends JPanel implements Cloneable {
 
     public Move bestMove(Game game) {
         Move bestMove = game.canMove().get(0);
-        int best = (game.current.color? Integer.MIN_VALUE + 1: Integer.MAX_VALUE - 1);
+        int best = (game.current.color? Integer.MIN_VALUE: Integer.MAX_VALUE);
         if (game.current.color) {
             for (Move move: game.canMove()) {
                 game.makeMove(move);
@@ -102,21 +102,26 @@ public class Game extends JPanel implements Cloneable {
 
     public int minMax(Game game, int depth) {
         if(game.board.win(true)) {
+            System.out.println("max");
             return Integer.MAX_VALUE;
         } else if (game.board.win(false)) {
+            System.out.println("min");
             return Integer.MIN_VALUE;
         } if (depth == 0) {
             return game.board.checkPos();
         }
-        int result = Integer.MIN_VALUE;
+        // error
+        int result = (game.current.color? Integer.MIN_VALUE : Integer.MAX_VALUE);
         for (Move move : game.canMove()) {
-            game.makeMove(move);
-            if (game.current.color) {
-                result = Math.max(minMax(game, depth - 1), result);
+            Game local = game;
+            local.makeMove(move);
+            if (!local.current.color) {
+                result = Math.max(minMax(local, depth - 1), result);
             } else {
-                result = Math.min(minMax(game, depth - 1), result);
+                result = Math.min(minMax(local, depth - 1), result);
             }
         }
+        System.out.println(result);
         return result;
     }
     public String toString() {
@@ -135,9 +140,8 @@ public class Game extends JPanel implements Cloneable {
 
     public Move isValidMove(Move move, Game game) {
         if (current.color == move.oldPiece.color) {
-            ArrayList<Move> moves = game.board.getMove(board.field[move.oldPiece.line][move.oldPiece.column]);
+            ArrayList<Move> moves = game.canMove();
             for (Move local: moves) {
-                System.out.println(local);
                 if (local.equals(move)) {
                     return local;
                 }
