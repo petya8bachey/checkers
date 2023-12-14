@@ -25,7 +25,7 @@ public class Game extends JPanel implements Cloneable {
         Graphics2D g2d = (Graphics2D) g;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                g2d.setColor((i + j) % 2 == 0 ? new Color(231, 231, 231):new Color(59, 55, 55));
+                g2d.setColor((i + j) % 2 != 0 ? new Color(231, 231, 231):new Color(59, 55, 55));
                 g2d.fillRect(j * titleSize,i * titleSize,titleSize,titleSize);
             }
         }
