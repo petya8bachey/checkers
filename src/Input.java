@@ -44,7 +44,6 @@ public class Input extends MouseAdapter {
                 }
 
                 game.makeMove(game.bestMove(game.clone()));
-                System.out.println(game.board.checkPos());
                 game.selectedPiece = null;
                 game.repaint();
             } else {

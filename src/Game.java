@@ -9,7 +9,7 @@ public class Game extends JPanel implements Cloneable {
     Player current = playerWhite;
     Board board = new Board();
     Input input = new Input(this);
-    public int deeper = 0;
+    public int deeper = 3;
     public int titleSize = 85;
     Game() {
         playerWhite.color = true;
@@ -102,26 +102,21 @@ public class Game extends JPanel implements Cloneable {
 
     public int minMax(Game game, int depth) {
         if(game.board.win(true)) {
-            System.out.println("max");
             return Integer.MAX_VALUE;
         } else if (game.board.win(false)) {
-            System.out.println("min");
             return Integer.MIN_VALUE;
         } if (depth == 0) {
             return game.board.checkPos();
         }
-        // error
         int result = (game.current.color? Integer.MIN_VALUE : Integer.MAX_VALUE);
         for (Move move : game.canMove()) {
-            Game local = game;
-            local.makeMove(move);
-            if (!local.current.color) {
-                result = Math.max(minMax(local, depth - 1), result);
+            game.makeMove(move);
+            if (game.current.color) {
+                result = Math.max(game.minMax(game, depth - 1), result);
             } else {
-                result = Math.min(minMax(local, depth - 1), result);
+                result = Math.min(game.minMax(game, depth - 1), result);
             }
         }
-        System.out.println(result);
         return result;
     }
     public String toString() {
