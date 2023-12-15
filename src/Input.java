@@ -36,13 +36,14 @@ public class Input extends MouseAdapter {
             move.newPiece = game.board.field[row][col];
             move = game.isValidMove(move, game);
             if (move != null) {
+                System.out.println(game.current.toString() + game.board.checkPos());
                 game.makeMove(move);
-                System.out.println(game.board.checkPos());
+                System.out.println(game.current.toString() + game.board.checkPos());
                 game.repaint();
                 if (game.board.win(!game.current.color)) {
                     System.out.println("You win");
+                    System.exit(0);
                 }
-
                 game.makeMove(game.bestMove(game.clone()));
                 game.selectedPiece = null;
                 game.repaint();

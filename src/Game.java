@@ -9,7 +9,7 @@ public class Game extends JPanel implements Cloneable {
     Player current = playerWhite;
     Board board = new Board();
     Input input = new Input(this);
-    public int deeper = 3;
+    public int deeper = 2;
     public int titleSize = 85;
     Game() {
         playerWhite.color = true;
@@ -78,19 +78,15 @@ public class Game extends JPanel implements Cloneable {
     public Move bestMove(Game game) {
         Move bestMove = game.canMove().get(0);
         int best = (game.current.color? Integer.MIN_VALUE: Integer.MAX_VALUE);
-        if (game.current.color) {
-            for (Move move: game.canMove()) {
-                game.makeMove(move);
-                int mm = minMax(game.clone(), deeper);
+        for (Move move : game.canMove()) {
+            game.makeMove(move);
+            int mm = minMax(game.clone(), deeper);
+            if (game.current.color) {
                 if (mm > best) {
                     best = mm;
                     bestMove = move;
                 }
-            }
-        } else {
-            for (Move move: game.canMove()) {
-                game.makeMove(move);
-                int mm = minMax(game.clone(), deeper);
+            } else {
                 if (mm < best) {
                     best = mm;
                     bestMove = move;
@@ -108,11 +104,11 @@ public class Game extends JPanel implements Cloneable {
         } if (depth == 0) {
             return game.board.checkPos();
         }
-        int result = (game.current.color? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        int result = (!game.current.color ? Integer.MIN_VALUE : Integer.MAX_VALUE);
         for (Move move : game.canMove()) {
             game.makeMove(move);
             if (game.current.color) {
-                result = Math.max(game.minMax(game, depth - 1), result);
+                result = Math.max(minMax(game, depth - 1), result);
             } else {
                 result = Math.min(game.minMax(game, depth - 1), result);
             }
