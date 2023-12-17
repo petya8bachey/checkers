@@ -9,7 +9,7 @@ public class Game extends JPanel implements Cloneable {
     Player current = playerWhite;
     Board board = new Board();
     Input input = new Input(this);
-    public int deeper = 2;
+    public int deeper = 3;
     public int titleSize = 85;
     Game() {
         playerWhite.color = true;

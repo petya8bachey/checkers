@@ -315,13 +315,13 @@ public class Board implements Cloneable{
                 black += godPieceCof;
             }
         }
-        return white - black;
+        return black - white;
     }
 
     public boolean win(boolean color) {
         ArrayList<Move> cmoves = new ArrayList<>();
         int max = 0;
-        ArrayList<Piece> pieces = piecesList(!color);
+        ArrayList<Piece> pieces = piecesList(color);
         ArrayList<Move> moves = new ArrayList<>();
         for (Piece piece : pieces) {
             moves.addAll(getMove(piece));
@@ -351,11 +351,5 @@ public class Board implements Cloneable{
             }
         }
         return result;
-    }
-
-    public boolean canEat(Piece piece) {
-        if (!getMove(piece).isEmpty()) {
-            return !getMove(piece).get(0).pieces.isEmpty();
-        } else return false;
     }
 }

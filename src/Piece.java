@@ -1,6 +1,24 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Piece implements Cloneable{
+    static BufferedImage b;
+    static BufferedImage bQ = null;
+    static BufferedImage w = null;
+    static BufferedImage wQ = null;
+    static {
+        try {
+            b = ImageIO.read(new File("src/img/piece_b.png"));
+            bQ = ImageIO.read(new File("src/img/piece_bQ.png"));
+            w = ImageIO.read(new File("src/img/piece_w.png"));
+            wQ = ImageIO.read(new File("src/img/piece_wQ.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     boolean queen = false;
     boolean color;
     boolean empty;
@@ -47,13 +65,15 @@ public class Piece implements Cloneable{
         return piece;
     }
 
-    public void paint(Graphics2D g) {
+    public void paint(Graphics2D g){
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(!color ? new Color(134, 20, 20):new Color(50, 85, 192));
-        g2d.fillRect(column * size,line * size,r,r);
+        BufferedImage image;
         if (queen) {
-            g2d.setColor(color ? new Color(134, 20, 20):new Color(50, 85, 192));
-            g2d.fillRect(column * size,line * size,s,s);
+            image = color? wQ: bQ;
+            g2d.drawImage(image, column * size, line * size, null);
+        } else {
+            image = color? w: b;
+            g2d.drawImage(image, column * size, line * size, null);
         }
     }
     @Override
