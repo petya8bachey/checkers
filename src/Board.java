@@ -315,13 +315,13 @@ public class Board implements Cloneable{
                 black += godPieceCof;
             }
         }
-        return black - white;
+        return white - black;
     }
 
     public boolean win(boolean color) {
         ArrayList<Move> cmoves = new ArrayList<>();
         int max = 0;
-        ArrayList<Piece> pieces = piecesList(color);
+        ArrayList<Piece> pieces = piecesList(!color);
         ArrayList<Move> moves = new ArrayList<>();
         for (Piece piece : pieces) {
             moves.addAll(getMove(piece));
